@@ -1,0 +1,394 @@
+{
+  "info": {
+    "_postman_id": "books-catalogue-v1",
+    "name": "MS Books Catalogue",
+    "description": "Colección completa para el microservicio de catálogo de libros (Relatos de Papel)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Libros - CRUD Básico",
+      "item": [
+        {
+          "name": "Crear Libro (Drácula)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Drácula\",\n    \"description\": \"El clásico de vampiros más influyente de la literatura.\",\n    \"price\": 49.99,\n    \"category\": \"Terror\",\n    \"isbn\": \"REF04-2323-45\",\n    \"stockQuantity\": 8,\n    \"coverImageUrl\": \"https://covers.openlibrary.org/b/id/7984916-L.jpg\",\n    \"status\": \"AVAILABLE\",\n    \"author\": \"Bram Stoker\",\n    \"publicationDate\": \"1897-05-26\",\n    \"rating\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"]
+            },
+            "description": "Crea un nuevo libro en el catálogo. Devuelve 201 Created con el objeto creado (incluye ID asignado)."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Libro (Dune)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Dune\",\n    \"description\": \"La épica historia de Paul Atreides en el desierto de Arrakis.\",\n    \"price\": 59.99,\n    \"category\": \"Ciencia Ficción\",\n    \"isbn\": \"REF01-1111-11\",\n    \"stockQuantity\": 12,\n    \"coverImageUrl\": \"https://covers.openlibrary.org/b/id/8114145-L.jpg\",\n    \"status\": \"AVAILABLE\",\n    \"author\": \"Frank Herbert\",\n    \"publicationDate\": \"1965-08-01\",\n    \"rating\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos los Libros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"]
+            },
+            "description": "Obtiene todos los libros visibles (status != HIDDEN). Sin parámetros devuelve lista completa."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Libro por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1"]
+            },
+            "description": "Busca un libro específico por su ID. Devuelve 404 si no existe."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Búsquedas y Filtros",
+      "item": [
+        {
+          "name": "Buscar por Categoría (Terror)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books?category=Terror",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Terror"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar por Autor (parcial)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books?author=Stoker",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"],
+              "query": [
+                {
+                  "key": "author",
+                  "value": "Stoker"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Búsqueda Combinada",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books?category=Terror&minRating=4&onlyVisible=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Terror"
+                },
+                {
+                  "key": "minRating",
+                  "value": "4"
+                },
+                {
+                  "key": "onlyVisible",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Filtra por categoría Terror, rating mínimo 4, y solo visibles (no eliminados)."
+          },
+          "response": []
+        },
+        {
+          "name": "Ver TODOS (incluyendo ocultos/eliminados)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books?onlyVisible=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"],
+              "query": [
+                {
+                  "key": "onlyVisible",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Muestra también los libros con status=HIDDEN (soft deleted)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Actualizaciones",
+      "item": [
+        {
+          "name": "Actualizar Completo (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Drácula (Edición Especial)\",\n    \"description\": \"Edición anotada con comentarios del autor.\",\n    \"price\": 59.99,\n    \"category\": \"Terror\",\n    \"isbn\": \"REF04-2323-45\",\n    \"stockQuantity\": 15,\n    \"coverImageUrl\": \"https://covers.openlibrary.org/b/id/7984916-L.jpg\",\n    \"status\": \"AVAILABLE\",\n    \"author\": \"Bram Stoker\",\n    \"publicationDate\": \"1897-05-26\",\n    \"rating\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1"]
+            },
+            "description": "Reemplaza TODO el recurso. Todos los campos son requeridos (excepto ID)."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Parcial (PATCH) - Solo precio",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"price\": 39.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1"]
+            },
+            "description": "Actualiza solo los campos enviados. Útil para cambios puntuales sin enviar todo el objeto."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Stock (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"stockQuantity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1"]
+            },
+            "description": "Al poner stock=0, el sistema automáticamente cambia status a OUT_OF_STOCK."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Soft Delete",
+      "item": [
+        {
+          "name": "Eliminar Libro (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1"]
+            },
+            "description": "No elimina físicamente. Cambia status a HIDDEN. El libro desaparece de búsquedas normales (onlyVisible=true) pero sigue en BD."
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar que está oculto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1"]
+            },
+            "description": "Después de eliminar (soft delete), este request devolverá 404 Not Found porque el libro está HIDDEN."
+          },
+          "response": []
+        },
+        {
+          "name": "Ver libro oculto (con flag)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books?onlyVisible=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books"],
+              "query": [
+                {
+                  "key": "onlyVisible",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Usando onlyVisible=false puedes ver el libro eliminado con status=HIDDEN."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Operador (Integración)",
+      "item": [
+        {
+          "name": "Verificar Disponibilidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/1/availability",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "1", "availability"]
+            },
+            "description": "Endpoint específico para el microservicio Operador. Devuelve true si: existe, no está HIDDEN, y stock > 0."
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar No Disponible (stock 0)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/2/availability",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "books", "2", "availability"]
+            },
+            "description": "Si el libro tiene stock=0 o está HIDDEN, devuelve false."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Utilidades",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Swagger UI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/swagger-ui.html",
+              "host": ["{{baseUrl}}"],
+              "path": ["swagger-ui.html"]
+            },
+            "description": "Documentación interactiva de la API."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    }
+  ]
+}
