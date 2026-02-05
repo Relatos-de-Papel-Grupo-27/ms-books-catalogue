@@ -145,7 +145,7 @@ Esto NO borra el registro, solo cambia status a HIDDEN
 
 `DELETE http://localhost:8081/api/v1/books/1`
 
-Colección JSON (para probar con Postman) 👉🏼 [MS-Books-Catalogue.postman_collection.json](MS-Books-Catalogue.postman_collection.json "MS-Books-Catalogue.postman_collection.json")
+Colección JSON (para probar con Postman) 👉🏼 [MS-Books-Catalogue.postman_collection.json](https://github.com/Relatos-de-Papel-Grupo-27/ms-books-catalogue/blob/main/MS-Books-Catalogue.postman_collection.json "MS-Books-Catalogue.postman_collection.json")
 
 #📚 Documentación API
 
