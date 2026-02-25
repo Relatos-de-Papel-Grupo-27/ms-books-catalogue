@@ -46,7 +46,7 @@ logging:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_URL:http://back-end-eureka.railway.internal/eureka}
+      defaultZone: ${EUREKA_URL:back-end-eureka/eureka}
     register-with-eureka: true
     fetch-registry: true
   instance:
