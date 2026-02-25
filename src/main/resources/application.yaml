@@ -17,9 +17,9 @@ spring:
 #      path: /h2-console
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/bookcatalogue
-    username: postgres
-    password: password123
+    url: jdbc:postgresql://srvrelatospapel.postgres.database.azure.com:5432/bookcatalogue
+    username: adminrelatos
+    password: Relatos2026*
     driver-class-name: org.postgresql.Driver
 
 #  jpa:
