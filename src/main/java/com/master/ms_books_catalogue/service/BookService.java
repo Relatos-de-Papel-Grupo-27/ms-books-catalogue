@@ -5,6 +5,8 @@ import com.master.ms_books_catalogue.repository.BookRepository;
 import com.master.ms_books_catalogue.specification.BookSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.master.ms_books_catalogue.search.document.BookDocument;
+import com.master.ms_books_catalogue.search.repository.BookSearchRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +16,33 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private BookSearchRepository bookSearchRepository;
+
+    private void indexBook(Book book) {
+
+        // Si está oculto, lo eliminamos del índice
+        if (book.getStatus() == Book.BookStatus.HIDDEN) {
+            bookSearchRepository.deleteById(book.getId().toString());
+            return;
+        }
+
+        BookDocument doc = new BookDocument();
+        doc.setId(book.getId().toString());
+        doc.setTitle(book.getTitle());
+        doc.setDescription(book.getDescription());
+        doc.setCategory(book.getCategory());
+        doc.setAuthor(book.getAuthor());
+        doc.setPrice(book.getPrice().doubleValue());
+        doc.setRating(book.getRating());
+        doc.setStatus(book.getStatus().name());
+        doc.setStockQuantity(book.getStockQuantity());
+        doc.setPublicationDate(book.getPublicationDate());
+
+        bookSearchRepository.save(doc);
+    }
+
 
     // CREATE
     public Book createBook(Book book) {
@@ -28,7 +57,9 @@ public class BookService {
             book.setStatus(Book.BookStatus.AVAILABLE);
         }
 
-        return bookRepository.save(book);
+        Book saved = bookRepository.save(book);
+        indexBook(saved);
+        return saved;
     }
 
     // READ - Obtener todos con filtros opcionales
@@ -71,7 +102,9 @@ public class BookService {
             book.setStatus(Book.BookStatus.OUT_OF_STOCK);
         }
 
-        return bookRepository.save(book);
+        Book updated = bookRepository.save(book);
+        indexBook(updated);
+        return updated;
     }
 
     // UPDATE parcial (PATCH) - Solo campos no nulos
@@ -95,14 +128,19 @@ public class BookService {
         if (bookDetails.getPublicationDate() != null) book.setPublicationDate(bookDetails.getPublicationDate());
         if (bookDetails.getRating() != null) book.setRating(bookDetails.getRating());
 
-        return bookRepository.save(book);
+        Book updated = bookRepository.save(book);
+        indexBook(updated);
+        return updated;
     }
 
     // DELETE
     public void deleteBook(Long id) {
         Book book = findById(id);
         book.setStatus(Book.BookStatus.HIDDEN);  // Eliminación lógica
-        bookRepository.save(book);
+        Book updated = bookRepository.save(book);
+
+        // Eliminar del índice
+        bookSearchRepository.deleteById(updated.getId().toString());
     }
 
     // Método especial para el Operador: verificar disponibilidad
@@ -114,5 +152,48 @@ public class BookService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    //Metodo de busqueda masivo
+    public List<BookDocument> searchBooks(String text) {
+        return bookSearchRepository.findByTitleContaining(text);
+    }
+
+    public void reindexAllBooks() {
+
+        // Limpia el índice antes de reindexar (opcional pero recomendado)
+        bookSearchRepository.deleteAll();
+
+        var books = bookRepository.findAll();
+
+        var documents = books.stream()
+                .map(this::convertToDocument)
+                .toList();
+
+        bookSearchRepository.saveAll(documents);
+
+        System.out.println("Total libros indexados: " + documents.size());
+    }
+
+    private BookDocument convertToDocument(Book book) {
+
+        BookDocument doc = new BookDocument();
+
+        doc.setId(book.getId().toString());
+        doc.setTitle(book.getTitle());
+        doc.setDescription(book.getDescription());
+        doc.setCategory(book.getCategory());
+        doc.setAuthor(book.getAuthor());
+        doc.setPrice(book.getPrice().doubleValue());
+        doc.setRating(book.getRating());
+        doc.setStatus(book.getStatus().name());
+        doc.setStockQuantity(book.getStockQuantity());
+        doc.setPublicationDate(book.getPublicationDate());
+
+        return doc;
+    }
+
+    public List<BookDocument> searchByCategory(String category) {
+        return bookSearchRepository.findByCategory(category);
     }
 }

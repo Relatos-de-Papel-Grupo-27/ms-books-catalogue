@@ -35,6 +35,10 @@ spring:
       hibernate:
         format_sql: true
 
+  data:
+    elasticsearch:
+      uris: https://c8ac127baaf14a43bf8e36bc3fc37533.us-central1.gcp.cloud.es.io
+      api-key: UGdldmxad0IxTjNsM3Qxa21iLUc6eFdMM2ktbDByZS1HYlhkWk1nZ2lLdw==
 #logging:
 #  level:
 #    org.springframework.web: DEBUG
@@ -49,6 +53,7 @@ eureka:
       defaultZone: ${EUREKA_URL:https://back-end-eureka-production-cd64.up.railway.app/eureka}
     register-with-eureka: true
     fetch-registry: true
+    enabled: true
   instance:
     preferIpAddress: true
     hostname: ms-books-catalogue
