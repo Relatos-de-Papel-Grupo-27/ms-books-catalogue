@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.master.ms_books_catalogue.search.document.BookDocument;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -90,6 +91,16 @@ public class BookController {
             return ResponseEntity.ok(books);
         }
 
+    @Operation(summary = "Búsqueda rápida (Elasticsearch)",
+            description = "Búsqueda optimizada por texto en título usando Elasticsearch")
+    @GetMapping("/search")
+    public ResponseEntity<List<BookDocument>> searchBooks(
+            @RequestParam String text) {
+
+        List<BookDocument> results = bookService.searchBooks(text);
+        return ResponseEntity.ok(results);
+    }
+
     // OBTENER por id - GET /api/v1/books/{id}
     @Operation(summary = "Obtener libro por ID", description = "Busca un libro específico por su identificador único")
     @ApiResponses(value = {
@@ -159,5 +170,14 @@ public class BookController {
             @Parameter(description = "ID del libro") @PathVariable Long id) {
         boolean available = bookService.isBookAvailable(id);
         return ResponseEntity.ok(available);
+    }
+
+    @GetMapping("/search/category")
+    public ResponseEntity<List<BookDocument>> searchByCategory(
+            @RequestParam String category) {
+
+        return ResponseEntity.ok(
+                bookService.searchByCategory(category)
+        );
     }
 }
