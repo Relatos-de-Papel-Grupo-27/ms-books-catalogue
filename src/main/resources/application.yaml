@@ -54,7 +54,7 @@ eureka:
       defaultZone: ${EUREKA_URL:https://back-end-eureka-production-cd64.up.railway.app/eureka}
     register-with-eureka: true
     fetch-registry: true
-    enabled: false
+    enabled: true
   instance:
     preferIpAddress: true
     hostname: ms-books-catalogue
