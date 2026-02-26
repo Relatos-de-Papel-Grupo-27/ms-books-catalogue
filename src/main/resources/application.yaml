@@ -35,10 +35,11 @@ spring:
       hibernate:
         format_sql: true
 
-  data:
-    elasticsearch:
-      uris: https://c8ac127baaf14a43bf8e36bc3fc37533.us-central1.gcp.cloud.es.io
-      api-key: UGdldmxad0IxTjNsM3Qxa21iLUc6eFdMM2ktbDByZS1HYlhkWk1nZ2lLdw==
+
+  elasticsearch:
+    uris: https://c8ac127baaf14a43bf8e36bc3fc37533.us-central1.gcp.cloud.es.io:443
+    username: adminRp
+    password: Relatos2026*
 #logging:
 #  level:
 #    org.springframework.web: DEBUG
