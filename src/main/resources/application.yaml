@@ -56,5 +56,5 @@ eureka:
     fetch-registry: true
     enabled: true
   instance:
-    preferIpAddress: true
+    preferIpAddress: false
     hostname: ms-books-catalogue
